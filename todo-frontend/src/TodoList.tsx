@@ -1,5 +1,8 @@
 import { useQuery, gql, useMutation } from "@apollo/client";
 import { useState } from "react";
+import { Button, TextField, Box, FormControl, List } from "@mui/material";
+import { Delete } from "@mui/icons-material";
+import { DeleteOutline } from "@mui/icons-material";
 
 const GET_TODOS = gql`
   query GetTodos {
@@ -109,33 +112,41 @@ export default function TodoList() {
   if (error) return <p>Error {error.message}</p>;
 
   return (
-    <div>
+    <Box sx={{ display: "flex", flexDirection: "column" }}>
       <form onSubmit={handleCreateTodo}>
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <button type="submit">Add Todo</button>
+        <FormControl sx={{ display: "flex", flexDirection: "column" }}>
+          <TextField
+            sx={{ marginBottom: ".5rem" }}
+            type="text"
+            placeholder="Enter a task..."
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <TextField
+            sx={{ marginBottom: ".5rem" }}
+            type="text"
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <Button size="large" type="submit">
+            Add Todo
+          </Button>
+        </FormControl>
       </form>
-      <ul>
+      <Box sx={{ color: "#454545" }}>
         {data.todos.map((todo: any) => (
-          <li key={todo.id}>
+          <List key={todo.id}>
             <span onClick={() => handleToggleComplete(todo)}>
               {todo.title} - {todo.description} -{" "}
               {todo.completed ? "Completed" : "Incomplete"}
             </span>
-            <button onClick={() => handleDeleteTodo(todo.id)}>Delete</button>
-          </li>
+            <Button color="error" onClick={() => handleDeleteTodo(todo.id)}>
+              <DeleteOutline />
+            </Button>
+          </List>
         ))}
-      </ul>
-    </div>
+      </Box>
+    </Box>
   );
 }
